@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+25+Charted&display=swap');
+body {
+    background-color: black;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Helvetica, sans-serif;
+}
+
+#calculatorContainer {
+    background-color: #cc0000;
+    border-bottom: 8px solid #7a0000;
+    min-height: auto;
+    max-height: 90vh;
+    width: 500px;
+}
+
+#calculatorDisplay {
+    background-color: #69C41E;
+    margin: 30px;
+    width: calc(100% - 60px - 32px);
+    height: 50px;
+    border-bottom: 6px solid #3c790a;
+    padding: 16px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    font-family: "Jersey 25 Charted", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 72px;
+
+}
+
+#calculatorInput {
+    padding: 10px 0px;
+    height: 60%;
+    width: calc(100% - 60px);
+    margin: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    gap: 8px;
+    border: 2px solid #d31818;
+    
+}
+
+.calculatorButton {
+    border: none;
+    height: 100px;
+    width: 100px;
+    font-size: 24px;
+}
+.calculatorButton:hover {
+    border-top: 3px solid #cc0000;
+}
+
+.normal {
+    background-color: white;
+    border-bottom: 4px solid #888;
+    color: #000;
+}
+.normal:hover {
+    background-color: #ddd;
+    border-bottom: 2px solid #666;
+    color: #222;
+}
+
+.operator {
+    background-color: #ccc;
+    border-bottom: 4px solid #777;
+    color: #000;
+}
+.operator:hover {
+    background-color: #aaa;
+    border-bottom: 2px solid #555;
+    color: #222;
+}
+
+.special {
+    width: 100%;
+    background-color: #333;
+    color: white;
+    border-bottom: 4px solid #111;
+}
+.special:hover{
+    background-color: #222;
+    border-bottom: 2.5px solid #000;
+    color: #ddd;
+}

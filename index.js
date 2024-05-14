@@ -27,13 +27,36 @@ function operate(operator, firstNumber, secondNumber){
         case "/":
             return divide(firstNumber, secondNumber);
         default:
-            return "cago"
+            return "probably an error";
     }
 };
 
-/// MAIN /////////
-let firstNumber = 10
-    , secondNumber = 2
-    , operator = '/';
+function addToDisplay(eventTarget){
+    displayDiv.innerHTML += eventTarget.innerHTML;
+    displayValue = displayDiv.innerHTML;
+}
 
-console.log(operate(operator, firstNumber, secondNumber));
+
+
+/// GLOBALS ///////
+const operatorsList = ["+", "-", "x", "/"];
+const buttonsDiv = document.querySelector("#calculatorInput");
+const displayDiv = document.querySelector("#calculatorDisplay");
+const displayValue = "";
+
+/// MAIN /////////
+buttonsDiv.addEventListener('click', (event) => {
+    if(event.target.id === "calculatorInput") return; // prevent processing the parent of buttons
+
+    switch(event.target.innerText){
+        case "=":
+            operate();
+            break;
+        case "C":
+            clearDisplay();
+            break;
+        default:
+            addToDisplay(event.target);
+            break;
+    };
+})

@@ -32,7 +32,8 @@ body {
     font-weight: 400;
     font-style: normal;
     font-size: 72px;
-
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 #calculatorInput {

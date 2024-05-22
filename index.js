@@ -1,22 +1,22 @@
 /// FUNCTIONS /////////
 function add(a, b){
-    return a+b;
+    return (+a)+(+b);
 };
 
 function subtract(a, b){
-    return a-b;
+    return (+a)-(+b);
 };
 
 function multiply(a, b){
-    return a*b;
+    return (+a)*(+b);
 };
 
 function divide(a, b){
-    return a/b;
+    return (+a)/(+b);
 };
 
 function operate(operator, firstNumber, secondNumber){
-    clearDisplay();
+    clearDisplay(false);
     switch(operator){
         case "+":
             return add(firstNumber, secondNumber);
@@ -37,14 +37,23 @@ function addToDisplay(text){
     displayValue = displayDiv.innerHTML;
 };
 
+function deleteLast(){
+    displayDiv.innerHTML = displayDiv.innerHTML.slice(0, -1);
+    displayValue = displayDiv.innerHTML;
+}
+
 function organizeDisplayInfo(){
+    if(displayValue.slice(0, 1) == '-'){ // first number is negative
+        let numbers = displayValue.slice(1).split(currentOperator);
+        return [currentOperator, (-1 * (+numbers[0])), numbers[1]];
+    }
+
     let numbers = displayValue.split(currentOperator);
-    console.log([currentOperator, numbers[0], numbers[1]])
     return [currentOperator, numbers[0], numbers[1]];
 }
 
-function clearDisplay(){
-    displayDiv.innerHTML = "";
+function clearDisplay(insertZero=true){
+    insertZero ? displayDiv.innerHTML = "0" : displayDiv.innerHTML = ""
     currentOperator = '';
 };
 
@@ -60,6 +69,19 @@ buttonsDiv.addEventListener('click', (event) => {
     if(event.target.id === "calculatorInput") return; // prevent processing the parent of buttons
 
     if(operatorsList.includes(event.target.innerHTML)){
+        let numbers, leftNumber, rightNumber;
+        numbers = organizeDisplayInfo().slice(1, 3);
+        leftNumber = numbers[0];
+        rightNumber = numbers[1];
+        console.log(numbers)
+
+        if(currentOperator && leftNumber && rightNumber){
+            addToDisplay(operate(currentOperator, leftNumber, rightNumber));
+        } 
+        else if (currentOperator && leftNumber && !rightNumber){
+            deleteLast(event.target.innerHTML);
+        }
+            
         currentOperator = event.target.innerHTML;
     }
 
@@ -72,6 +94,7 @@ buttonsDiv.addEventListener('click', (event) => {
             
             // TODO: make logic 7+8- cases
             // TODO: block div by 0
+            // TODO: block insertion of multiple 0s
             if(leftNumber && rightNumber){
                 addToDisplay(operate(currentOperator, leftNumber, rightNumber));
             }

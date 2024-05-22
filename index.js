@@ -53,7 +53,13 @@ function organizeDisplayInfo(){
 }
 
 function clearDisplay(insertZero=true){
-    insertZero ? displayDiv.innerHTML = "0" : displayDiv.innerHTML = ""
+    if(insertZero){
+        displayDiv.innerHTML = '0';
+        displayValue = '0';
+    } else {
+        displayDiv.innerHTML = "";
+        displayValue = '';
+    }
     currentOperator = '';
 };
 
@@ -67,13 +73,14 @@ let currentOperator = "";
 /// MAIN /////////
 buttonsDiv.addEventListener('click', (event) => {
     if(event.target.id === "calculatorInput") return; // prevent processing the parent of buttons
+    if(displayValue == "!DIV" && event.target.innerText !== "C") return;
+
 
     if(operatorsList.includes(event.target.innerHTML)){
         let numbers, leftNumber, rightNumber;
         numbers = organizeDisplayInfo().slice(1, 3);
         leftNumber = numbers[0];
         rightNumber = numbers[1];
-        console.log(numbers)
 
         if(currentOperator && leftNumber && rightNumber){
             addToDisplay(operate(currentOperator, leftNumber, rightNumber));
@@ -92,9 +99,14 @@ buttonsDiv.addEventListener('click', (event) => {
             leftNumber = numbers[0];
             rightNumber = numbers[1];
             
-            // TODO: make logic 7+8- cases
+            // TODO: can add negative numbers
             // TODO: block div by 0
             // TODO: block insertion of multiple 0s
+            if(rightNumber == 0){
+                clearDisplay(false);
+                addToDisplay("!DIV")
+                break;
+            }
             if(leftNumber && rightNumber){
                 addToDisplay(operate(currentOperator, leftNumber, rightNumber));
             }

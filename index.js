@@ -45,8 +45,11 @@ function deleteLast(){
 
 function organizeDisplayInfo(){
     if(displayValue.slice(0, 1) == '-'){ // first number is negative
-        let numbers = displayValue.slice(1).split(currentOperator);
-        return [currentOperator, (-1 * (+numbers[0])), numbers[1]];
+        if(displayValue.slice(1) != ''){
+            let numbers = displayValue.slice(1).split(currentOperator);
+            return [currentOperator, (-1 * (+numbers[0])), numbers[1]];
+        }
+        return [currentOperator, undefined, undefined]
     }
 
     let numbers = displayValue.split(currentOperator);
@@ -62,6 +65,7 @@ function clearDisplay(insertZero=true){
         displayValue = '';
     }
     currentOperator = '';
+    isNegative = false;
 };
 
 /// GLOBALS ///////
@@ -70,6 +74,7 @@ const buttonsDiv = document.querySelector("#calculatorInput");
 const displayDiv = document.querySelector("#calculatorDisplay");
 let displayValue = "0";
 let currentOperator = "";
+let isNegative = false;
 
 /// MAIN /////////
 buttonsDiv.addEventListener('click', (event) => {
@@ -88,9 +93,14 @@ buttonsDiv.addEventListener('click', (event) => {
         } 
         else if (currentOperator && leftNumber && !rightNumber){
             deleteLast(event.target.innerHTML);
+        } else if (event.target.innerHTML == "-" && displayValue == "0"){
+            isNegative = true;
         }
-            
-        currentOperator = event.target.innerHTML;
+        
+        if(!isNegative){
+            currentOperator = event.target.innerHTML;
+        }
+        isNegative = false;
     }
 
     switch(event.target.innerText){
@@ -101,7 +111,10 @@ buttonsDiv.addEventListener('click', (event) => {
             rightNumber = numbers[1];
             
             // TODO: can add negative numbers
+            // TODO: cannot insert operators first (only -)
             // TODO: block insertion of multiple 0s
+            // TODO: keyboard input
+            // TODO: decimals
             if(rightNumber == 0){
                 clearDisplay(false); 
                 addToDisplay("!DIV")
@@ -115,7 +128,11 @@ buttonsDiv.addEventListener('click', (event) => {
             clearDisplay();
             break;
         default:
-            addToDisplay(event.target.innerHTML);
+            if(operatorsList.includes(event.target.innerText) && displayValue== '-'){
+                break;
+            } else {
+                addToDisplay(event.target.innerHTML);
+            }
             break;
     };
 })

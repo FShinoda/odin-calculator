@@ -33,6 +33,7 @@ function operate(operator, firstNumber, secondNumber){
 };
 
 function addToDisplay(text){
+    if (displayValue == 0) displayDiv.innerHTML = "";
     displayDiv.innerHTML += text;
     displayValue = displayDiv.innerHTML;
 };
@@ -53,10 +54,10 @@ function organizeDisplayInfo(){
 }
 
 function clearDisplay(insertZero=true){
-    if(insertZero){
+    if(insertZero){ // reset display state
         displayDiv.innerHTML = '0';
         displayValue = '0';
-    } else {
+    } else { // clears display before add result mostly
         displayDiv.innerHTML = "";
         displayValue = '';
     }
@@ -67,7 +68,7 @@ function clearDisplay(insertZero=true){
 const operatorsList = ["+", "-", "x", "/"];
 const buttonsDiv = document.querySelector("#calculatorInput");
 const displayDiv = document.querySelector("#calculatorDisplay");
-let displayValue = "";
+let displayValue = "0";
 let currentOperator = "";
 
 /// MAIN /////////
@@ -100,10 +101,9 @@ buttonsDiv.addEventListener('click', (event) => {
             rightNumber = numbers[1];
             
             // TODO: can add negative numbers
-            // TODO: block div by 0
             // TODO: block insertion of multiple 0s
             if(rightNumber == 0){
-                clearDisplay(false);
+                clearDisplay(false); 
                 addToDisplay("!DIV")
                 break;
             }

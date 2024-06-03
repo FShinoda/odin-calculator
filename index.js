@@ -1,138 +1,160 @@
-/// FUNCTIONS /////////
+/// FUNCTIONS ------------------
 function add(a, b){
     return (+a)+(+b);
 };
-
 function subtract(a, b){
     return (+a)-(+b);
 };
-
 function multiply(a, b){
     return (+a)*(+b);
 };
-
 function divide(a, b){
     return (+a)/(+b);
 };
 
-function operate(operator, firstNumber, secondNumber){
-    clearDisplay(false);
-    switch(operator){
+function verifyValidOperation(){
+
+};
+
+function fixDecimalPlaces(total){
+    if(total % 10 != 0){
+        return parseFloat(total.toFixed(2));
+    } else { 
+        return total;
+    }
+};
+
+function operate(){
+    let operation, leftNumber, rightNumber, total;
+
+    operation = displayValue.split(currentOperator);
+    leftNumber = operation[0];
+    rightNumber = operation[1];
+    console.log(leftNumber, rightNumber, currentOperator);
+
+    switch(currentOperator){
         case "+":
-            return add(firstNumber, secondNumber);
+            total = fixDecimalPlaces(add(leftNumber, rightNumber));
+            break;
         case "-":
-            return subtract(firstNumber, secondNumber);
-        case "*":
+            total = fixDecimalPlaces(subtract(leftNumber, rightNumber));
+            break;
         case "x":
-            return multiply(firstNumber, secondNumber);
+            total = fixDecimalPlaces(multiply(leftNumber, rightNumber));
+            break;
         case "/":
-            return divide(firstNumber, secondNumber);
+            if(rightNumber == 0){
+                total = "!DIV";
+                break;
+            };
+            total = fixDecimalPlaces(divide(leftNumber, rightNumber));
+            break;
         default:
-            return "probably an error";
-    }
-};
-
-function addToDisplay(text){
-    if (displayValue == 0) displayDiv.innerHTML = "";
-    displayDiv.innerHTML += text;
-    displayValue = displayDiv.innerHTML;
-};
-
-function deleteLast(){
-    displayDiv.innerHTML = displayDiv.innerHTML.slice(0, -1);
-    displayValue = displayDiv.innerHTML;
-}
-
-function organizeDisplayInfo(){
-    if(displayValue.slice(0, 1) == '-'){ // first number is negative
-        if(displayValue.slice(1) != ''){
-            let numbers = displayValue.slice(1).split(currentOperator);
-            return [currentOperator, (-1 * (+numbers[0])), numbers[1]];
-        }
-        return [currentOperator, undefined, undefined]
+            total = "probably an error";
     }
 
-    let numbers = displayValue.split(currentOperator);
-    return [currentOperator, numbers[0], numbers[1]];
-}
-
-function clearDisplay(insertZero=true){
-    if(insertZero){ // reset display state
-        displayDiv.innerHTML = '0';
-        displayValue = '0';
-    } else { // clears display before add result mostly
-        displayDiv.innerHTML = "";
-        displayValue = '';
-    }
+    changeDisplay(total);
     currentOperator = '';
-    isNegative = false;
 };
 
-/// GLOBALS ///////
-const operatorsList = ["+", "-", "x", "/"];
-const buttonsDiv = document.querySelector("#calculatorInput");
-const displayDiv = document.querySelector("#calculatorDisplay");
-let displayValue = "0";
-let currentOperator = "";
-let isNegative = false;
-
-/// MAIN /////////
-buttonsDiv.addEventListener('click', (event) => {
-    if(event.target.id === "calculatorInput") return; // prevent processing the parent of buttons
-    if(displayValue == "!DIV" && event.target.innerText !== "C") return;
-
-
-    if(operatorsList.includes(event.target.innerHTML)){
-        let numbers, leftNumber, rightNumber;
-        numbers = organizeDisplayInfo().slice(1, 3);
-        leftNumber = numbers[0];
-        rightNumber = numbers[1];
-
-        if(currentOperator && leftNumber && rightNumber){
-            addToDisplay(operate(currentOperator, leftNumber, rightNumber));
-        } 
-        else if (currentOperator && leftNumber && !rightNumber){
-            deleteLast(event.target.innerHTML);
-        } else if (event.target.innerHTML == "-" && displayValue == "0"){
-            isNegative = true;
-        }
-        
-        if(!isNegative){
-            currentOperator = event.target.innerHTML;
-        }
-        isNegative = false;
+function addNumber(number){
+    if(displayValue == '0'){
+        changeDisplay(number, append=false);
+    } else {
+        changeDisplay(number, append=true);
     }
+};
+
+function addOperator(operator){
+    if(operatorsList.includes(displayValue.slice(-1)) || displayValue.slice(-1) == '.'){
+        changeDisplay(displayValue.slice(0, -1));
+    } else if(currentOperator){ // && validoperation
+        operate();
+    };
+    changeDisplay(operator, append=true);
+    currentOperator = operator;
+};
+
+function verifyDotExistence(){
+    if(currentOperator){ 
+        return displayValue.split(currentOperator)[1].includes('.')
+    } else {
+        return displayValue.includes('.')
+    }
+}
+
+function addDecimalDot(decimalDot){
+    if(!verifyDotExistence()){ // dot not exist
+        if(displayValue.slice(-1) == '.'){
+            changeDisplay(displayValue.slice(0, -1));
+        } else if (operatorsList.includes(displayValue.slice(-1))){
+            changeDisplay('0', append=true);
+        };
+        
+        changeDisplay(decimalDot, append=true);
+    }
+};
+
+function clearLast(){
+    changeDisplay(displayValue.slice(0, -1));
+};
+
+function clearAll(){
+    changeDisplay('');
+};
+
+function resetDisplay(){
+    changeDisplay('0');
+    currentOperator = '';
+};
+
+function changeDisplay(newValue, append=false){
+    if(append){
+        displayValue += newValue + "";
+        displayDiv.innerHTML += newValue + "";
+    } else {
+        displayValue = newValue + "";
+        displayDiv.innerHTML = newValue + "";
+    }
+};
+
+
+/// GLOBALS ------------------
+const operatorsList = ["+", "-", "x", "/"]
+    , buttonsDiv = document.querySelector("#calculatorInput")
+    , displayDiv = document.querySelector("#calculatorDisplay");
+
+let displayValue = '0'
+    , currentOperator = '';
+
+
+/// MAIN ------------------
+buttonsDiv.addEventListener('click', (event) => {
+    let newInput = event.target.innerText;
+
+    if(event.target.id === "calculatorInput") return; // prevent processing the parent of buttons
+    if(displayValue == "!DIV" && newInput !== "C") return; // lock inputing when calculator display !DIV
 
     switch(event.target.innerText){
         case "=":
-            let numbers, leftNumber, rightNumber;
-            numbers = organizeDisplayInfo().slice(1, 3);
-            leftNumber = numbers[0];
-            rightNumber = numbers[1];
-            
-            // TODO: can add negative numbers
-            // TODO: cannot insert operators first (only -)
-            // TODO: block insertion of multiple 0s
-            // TODO: keyboard input
-            // TODO: decimals
-            if(rightNumber == 0){
-                clearDisplay(false); 
-                addToDisplay("!DIV")
-                break;
-            }
-            if(leftNumber && rightNumber){
-                addToDisplay(operate(currentOperator, leftNumber, rightNumber));
-            }
+            operate();
             break;
         case "C":
-            clearDisplay();
+            resetDisplay();
+            break;
+        case "+":
+        case "-":
+        case "/":
+        case "x":
+            addOperator(newInput);
+            break;
+        case ".":
+            addDecimalDot(newInput);
             break;
         default:
-            if(operatorsList.includes(event.target.innerText) && displayValue== '-'){
-                break;
-            } else {
-                addToDisplay(event.target.innerHTML);
-            }
+            addNumber(newInput);
             break;
     };
-})
+
+
+});

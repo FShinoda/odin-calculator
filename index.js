@@ -12,10 +12,6 @@ function divide(a, b){
     return (+a)/(+b);
 };
 
-function verifyValidOperation(){
-
-};
-
 function fixDecimalPlaces(total){
     if(total % 10 != 0){
         return parseFloat(total.toFixed(2));

@@ -6,6 +6,8 @@ I found it a little more complex than the other TOP projects... I've never made 
 <br><br>
 Flexed DOM Manipulation skills, logic, if-elses, switch cases & css flexbox.
 
-<img src="./img/calculator.PNG" alt="Calculator image" width="auto" height="500px" />
+<div align="center">
+  <img src="./img/calculator.PNG" alt="Calculator image" width="auto" height="500px" />
+</div>
 
 I would like to thank all the volunteers of The Odin Project for making this course avaible for free :heart:

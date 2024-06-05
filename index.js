@@ -20,37 +20,48 @@ function fixDecimalPlaces(total){
     }
 };
 
+function verifyOperationStructure(leftNumber, rightNumber){
+    if(leftNumber && rightNumber && currentOperator){
+        return true;
+    } 
+
+    return false;
+}
+
 function operate(){
     let operation, leftNumber, rightNumber, total;
 
     operation = displayValue.split(currentOperator);
     leftNumber = operation[0];
     rightNumber = operation[1];
-    console.log(leftNumber, rightNumber, currentOperator);
 
-    switch(currentOperator){
-        case "+":
-            total = fixDecimalPlaces(add(leftNumber, rightNumber));
-            break;
-        case "-":
-            total = fixDecimalPlaces(subtract(leftNumber, rightNumber));
-            break;
-        case "x":
-            total = fixDecimalPlaces(multiply(leftNumber, rightNumber));
-            break;
-        case "/":
-            if(rightNumber == 0){
-                total = "!DIV";
+    if (verifyOperationStructure(leftNumber, rightNumber)){
+        switch(currentOperator){
+            case "+":
+                total = fixDecimalPlaces(add(leftNumber, rightNumber));
                 break;
-            };
-            total = fixDecimalPlaces(divide(leftNumber, rightNumber));
-            break;
-        default:
-            total = "probably an error";
+            case "-":
+                total = fixDecimalPlaces(subtract(leftNumber, rightNumber));
+                break;
+            case "x":
+                total = fixDecimalPlaces(multiply(leftNumber, rightNumber));
+                break;
+            case "/":
+                if(rightNumber == 0){
+                    total = "!DIV";
+                    break;
+                };
+                total = fixDecimalPlaces(divide(leftNumber, rightNumber));
+                break;
+            default:
+                total = "probably an error";
+        }
+    
+        changeDisplay(total);
+        currentOperator = '';
+        rightNumber = '';
+        leftNumber = '';
     }
-
-    changeDisplay(total);
-    currentOperator = '';
 };
 
 function addNumber(number){
